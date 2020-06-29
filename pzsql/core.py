@@ -1,13 +1,15 @@
-import os
-from typing import Sequence, AnyStr, Any, Callable
-from error import PySQLError
-import configparser
-import logging as logger
-import pymysql.cursors as cursors
+# Python corelib
+import configparser, os, logging
+from typing import *
+
+# 3rd party lib
 from pymysqlpool.pool import Pool
 
+# Error code
+from .error import Error
 
-class PySQL:
+
+class Executor:
     def __init__(self, conf_tag: str, conf_file='config.ini'):
         super().__init__()
         parser = configparser.ConfigParser()
@@ -33,7 +35,7 @@ class PySQL:
             max_size = 10
 
         self._pool = Pool(user=username, password=password, host=host, port=port,
-                          db=schema, min_size=min_size, max_size=max_size, autocommit=True)
+                          db=schema, min_size=min_size, max_size=max_size)
 
     def excute(self, query: AnyStr, param: Sequence[Any] = (),
                func: Callable = lambda row: row) -> int:
@@ -43,14 +45,15 @@ class PySQL:
             try:
                 with conn.cursor() as cursor:
                     count: int = cursor.execute(query, param)
+                    conn.commit()
                     rows = cursor.fetchall()
                     for row in rows:
                         func(row)
             except Exception as e:
-                count = PySQLError.PUT_MYSQL_FAIL
-                logger.error(e)
+                count = Error.MYSQL_FAIL
+                logging.error(e)
         except Exception as e:
-            count = PySQLError.UNKNOWN_ERROR
-            logger.error(e)
+            count = Error.UNKNOWN_ERROR
+            logging.error(e)
 
         return count

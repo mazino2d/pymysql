@@ -134,3 +134,4 @@ dmypy.json
 
 # config file
 config.ini
+config.pypirc
