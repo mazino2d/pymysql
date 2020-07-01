@@ -37,7 +37,7 @@ class Executor:
         self._pool = Pool(user=username, password=password, host=host, port=port,
                           db=schema, min_size=min_size, max_size=max_size)
 
-    def excute(self, query: AnyStr, param: Sequence[Any] = (),
+    def execute(self, query: AnyStr, param: Sequence[Any] = (),
                func: Callable = lambda row: row) -> int:
 
         try:
@@ -45,6 +45,31 @@ class Executor:
             try:
                 with conn.cursor() as cursor:
                     count: int = cursor.execute(query, param)
+                    conn.commit()
+                    rows = cursor.fetchall()
+                    for row in rows:
+                        func(row)
+            except Exception as e:
+                count = Error.MYSQL_FAIL
+                logging.error(e)
+        except Exception as e:
+            count = Error.UNKNOWN_ERROR
+            logging.error(e)
+
+        return count
+    
+    def execute_batch(self, query: AnyStr, 
+                params: Sequence[Sequence[Any]] = (),
+                func: Callable = lambda row: row) -> int:
+
+        try:
+            conn = self._pool.get_conn()
+            try:
+                count = 0
+                with conn.cursor() as cursor:
+                    for param in params:
+                        reg: int = cursor.execute(query, param)
+                        count = count + reg
                     conn.commit()
                     rows = cursor.fetchall()
                     for row in rows:

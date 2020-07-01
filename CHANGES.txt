@@ -1,1 +1,2 @@
 0.0.1: Add execute function
+0.0.2: Add execute_batch function
