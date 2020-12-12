@@ -7,10 +7,10 @@ pip install zcommon4py # or pip3
 ### Logger
 
 ```python
-from zcommon4py import Logger
+from zcommon4py import ZLogger
 
 if __name__ == "__main__":
-    logger = Logger("logger")
+    logger = ZLogger("logger")
     logger.debug("debug")
     logger.info("info")
     logger.warning("warning")

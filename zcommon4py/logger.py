@@ -2,7 +2,7 @@ import logging
 import os
 
 
-class Logger(object):
+class ZLogger(object):
     def __init__(self, name="logger", level=logging.DEBUG):
         FORMAT = "[%(asctime)s] {%(name)s:%(lineno)d} %(levelname)s - %(message)s"
 
@@ -38,7 +38,7 @@ class Logger(object):
 
 
 if __name__ == "__main__":
-    logger = Logger()
+    logger = ZLogger()
     logger.debug("debug")
     logger.info("info")
     logger.warning("warning")

@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     setup(
         name="zcommon4py",
-        version="1.0.1",
+        version="1.0.2",
         license="MIT",
         author="Khoi Dang Do",
         author_email="mazino2d@gmail.com",
