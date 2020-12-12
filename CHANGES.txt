@@ -1,1 +1,2 @@
-0.0.1: Add Logger
+1.0.0: Add Logger
+1.0.1: Add Timer
